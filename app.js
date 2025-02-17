@@ -53,3 +53,23 @@ async function getArtistData(artistId, accessToken) {
         "popularity": data.popularity,
     }
 }
+
+// Get the most popular music from the bands
+async function getArtistTopTrack(artistId, accessToken) {
+    const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}/top-tracks`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
+
+    if (response.status != 200) {
+        console.error('Error obteniendo las canciones del artista')
+    }
+    const data = await response.json();
+    const result = data.tracks[0]
+    return {
+        "name": result.name,
+        "popularity": result.popularity,
+    }
+}
