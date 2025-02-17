@@ -1,23 +1,26 @@
 const clientId = SPOTIFY_CONFIG.CLIENT_ID;
 const clientSecret = SPOTIFY_CONFIG.CLIENT_SECRET;
 
-// Obtain access token
-async function getAccessToken() {
-    const response = await fetch('https://accounts.spotify.com/api/token', {
-        method: 'POST',
-        headers: {
-            'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret),
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'grant_type=client_credentials'
-    });
+const APIController = (function() {
+    // Obtain access token
+    async function getAccessToken() {
+        const response = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret),
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'grant_type=client_credentials'
+        });
 
-    if (response.status != 200) {
-        console.error(`Error obteniendo el token de Spotify: ${response.json()}`)
+        if (!response.ok) {
+            console.error(`Error obteniendo el token de Spotify: ${await response.json()}`);
+            return null;
+        }
+
+        const data = await response.json();
+        return data.access_token;
     }
-    const data = await response.json();
-    return data.access_token;
-}
 
 // Obtain the IDs of the bands
 async function getSearchArtist(artistName, accessToken) {
@@ -73,3 +76,14 @@ async function getArtistTopTrack(artistId, accessToken) {
         "popularity": result.popularity,
     }
 }
+
+return {
+    getAccessToken,
+    getSearchArtist,
+    //getAllArtists,
+    getArtistData,
+    //getArtistTopTracks  
+};
+
+
+})();
