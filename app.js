@@ -14,7 +14,7 @@ const APIController = (function() {
         });
 
         if (!response.ok) {
-            console.error(`Error obteniendo el token de Spotify: ${await response.json()}`);
+            console.error(`Error obtaining Spotify token: ${await response.json()}`);
             return null;
         }
 
@@ -22,20 +22,27 @@ const APIController = (function() {
         return data.access_token;
     }
 
-// Obtain the IDs of the bands
-async function getSearchArtist(artistName, accessToken) {
-    const response = await fetch(`https://api.spotify.com/v1/search?q=${artistName}&type=artist&limit=1`, {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
-        }
-    });
+    // Obtain the IDs of the bands
+    async function getSearchArtist(artistName, accessToken) {
+        const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist&limit=1`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
 
-    if (response.status != 200) {
-        console.error('Error obteniendo el artista')
+        if (!response.ok) {
+            console.error('Error obtaining the artist');
+            return null;
+        }
+
+        const data = await response.json();
+        if (data.artists.items.length === 0) {
+            console.warn(`Artist not found: ${artistName}`);
+            return null;
+        }
+
+        return data.artists.items[0].id;
     }
-    const data = await response.json();
-    return data.artists.items[0].id;
-}
 
 // Obtain data from the bands
 async function getArtistData(artistId, accessToken) {
