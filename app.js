@@ -19,3 +19,17 @@ async function getAccessToken() {
     return data.access_token;
 }
 
+// Obtain the IDs of the bands
+async function getSearchArtist(artistName, accessToken) {
+    const response = await fetch(`https://api.spotify.com/v1/search?q=${artistName}&type=artist&limit=1`, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
+
+    if (response.status != 200) {
+        console.error('Error obteniendo el artista')
+    }
+    const data = await response.json();
+    return data.artists.items[0].id;
+}
