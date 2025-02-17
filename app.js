@@ -33,3 +33,23 @@ async function getSearchArtist(artistName, accessToken) {
     const data = await response.json();
     return data.artists.items[0].id;
 }
+
+// Obtain data from the bands
+async function getArtistData(artistId, accessToken) {
+    const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
+
+    if (response.status != 200) {
+        console.error('Error obteniendo los datos del artista')
+    }
+    const data = await response.json();
+    return {
+        "name": data.name,
+        "followers": data.followers.total,
+        "popularity": data.popularity,
+    }
+}
