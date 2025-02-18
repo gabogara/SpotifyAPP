@@ -114,24 +114,48 @@ async function getAllArtists(query, accessToken, limit = 10) {
     }
 
 // Get the most popular music from the bands
-async function getArtistTopTrack(artistId, accessToken) {
-    const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}/top-tracks`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
-        }
-    });
+// Obtener la música mas sonada de las bandas
+async function getArtistTopTracks(artistId, accessToken, market = "US") {
+    try {
+        const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=${market}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
 
-    if (response.status != 200) {
-        console.error('Error obteniendo las canciones del artista')
-    }
-    const data = await response.json();
-    const result = data.tracks[0]
-    return {
-        "name": result.name,
-        "popularity": result.popularity,
+        if (!response.ok) {
+            let errorMessage = `⚠️ Error ${response.status}: No se pudieron obtener las canciones populares.`;
+            try {
+                const errorData = await response.json();
+                errorMessage += ` Detalles: ${errorData.error?.message || 'Sin información adicional.'}`;
+            } catch (jsonError) {
+                errorMessage += ' No se pudo leer la respuesta del error.';
+            }
+            console.error(errorMessage);
+            return [];
+        }
+
+        const data = await response.json();
+        if (!data.tracks || data.tracks.length === 0) {
+            console.warn(`⚠️ No se encontraron canciones populares para el artista con ID: ${artistId}`);
+            return [];
+        }
+
+        return data.tracks.map(track => ({
+            name: track.name,
+            popularity: track.popularity,
+            album: track.album.name,
+            release_date: track.album.release_date,
+            preview_url: track.preview_url || "No disponible",
+            spotify_url: track.external_urls.spotify
+        }));
+    } catch (error) {
+        console.error('🚨 Error en getArtistTopTracks:', error);
+        return [];
     }
 }
+
 
 return {
     getAccessToken,
@@ -139,6 +163,8 @@ return {
     //getAllArtists,
     getArtistData,
     //getArtistTopTracks  
+
+
 };
 
 
