@@ -114,7 +114,6 @@ async function getAllArtists(query, accessToken, limit = 10) {
     }
 
 // Get the most popular music from the bands
-// Obtener la música mas sonada de las bandas
 async function getArtistTopTracks(artistId, accessToken, market = "US") {
     try {
         const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=${market}`, {
@@ -160,12 +159,47 @@ async function getArtistTopTracks(artistId, accessToken, market = "US") {
 return {
     getAccessToken,
     getSearchArtist,
-    //getAllArtists,
+    getAllArtists,
     getArtistData,
-    //getArtistTopTracks  
-
+    getArtistTopTracks  
 
 };
 
+})();
 
+(async function testAllFunctions() {
+    const token = await APIController.getAccessToken();
+    if (!token) {
+        console.error("❌ The token could not be obtained.");
+        return;
+    }
+    console.log("✅ Access token obtained successfully.");
+
+    // 🎤 1. Artist search test
+    const artistName = "Coldplay"; 
+    console.log(`🔍 Searching for artist ID: ${artistName}`);
+    const artistId = await APIController.getSearchArtist(artistName, token);
+    if (!artistId) {
+        console.warn(`⚠️ Artist not found: ${artistName}`);
+        return;
+    }
+    console.log(`✅ Artist ID found: ${artistId}`);
+
+    // 🎵 2. Get detailed information about the artist
+    console.log(`🔍 Obtaining data from the artist ${artistName}...`);
+    const artistData = await APIController.getArtistData(artistId, token);
+    console.log(artistData);
+
+    // 🔥 3. Obtain the artist's most popular songs
+    console.log(`🔍 Getting more popular songs from ${artistName}...`);
+    const topTracks = await APIController.getArtistTopTracks(artistId, token);
+    console.log(topTracks);
+
+    // 🎭 4. Search for several artists related to a term
+    const searchQuery = "rock";
+    console.log(`🔍 Searching for artists related to '${searchQuery}'...`);
+    const artists = await APIController.getAllArtists(searchQuery, token, 5);
+    console.log(artists);
+
+    console.log("✅ All the tests have finished.");
 })();
