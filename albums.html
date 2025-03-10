@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Pre-Work Assignment</title>
+    <title>Albums</title>
     <link rel="stylesheet" href="style.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
 </head>
 <body>
+    
     <main class="main container">
-        <!-- Top Bar -->
-        <div class="topbar">
+         <!-- Top Bar -->
+         <div class="topbar">
             
 			<a href="/index.html"> <i class="fa-solid fa-house"></i> Home</a></li>
             
@@ -50,33 +52,27 @@
 					<div class="feature">
 						<h3>Albums</h3>
 						<p>A dedicated page displays all the albums of the selected artist, fetched using their ID from the API.</p>
-					</div>	
+					</div>		
 
 					<div class="feature">
 						<h3>Music Genres</h3>
 						<p>In the main page we can see the result of the call to the API to obtain the musical genres.</p>
-					</div>		
+					</div>	
 			</div>
            
         </nav>
 
+
         <!-- Main Content -->
         <section class="main-content">
-            <!-- Artist Search -->
-            <div id="search" class="container-name-concentracion">
-                <h1 class="title-playlist">Search for an Artist</h1>
-                <div class="search-container">
-                    <input type="text" id="artistInput" placeholder="Enter artist name...">
-                    <button id="searchButton">Search</button>
-                </div>
-                <div id="results" class="results-container"></div>
+        
+
+            <!-- albums -->
+            <div id="top-tracks">
+                <h2 id="artistAlbumsTitle" class="title-playlist">Albums</h2>
+                <div class="container-card-concentracion" id="albumsContainer"></div>
             </div>
 
-            <!-- Music Genres -->
-            <div id="playlists">
-                <h1 class="title-playlist">Music Genres</h1>
-                <div class="container-cardGender-concentracion" id="genresContainer"></div>
-            </div>
 
         </section>
 
@@ -85,15 +81,13 @@
             <div class="container-links-footer">
                 <div class="links-footer">
                     <h3>About Me</h3>
-                    <a href="https://github.com/gabogara/">GitHub Repository</a>
+                    <a href="#">GitHub Repository</a>
                 </div>
             </div>
-			<p>Built with ❤️ using the Spotify API</p>
+            <p>Built with ❤️ using the Spotify API</p>
         </footer>
     </main>
 
-    <!-- Main Script -->
-	<script type="module" src="config.js"></script>
-    <script type="module" src="main.js"></script>
+    <script type="module" src="albums.js"></script>
 </body>
 </html>
